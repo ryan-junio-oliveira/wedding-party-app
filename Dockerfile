@@ -29,8 +29,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Ajustar permissões
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
 
-# Expor a porta que o PHP-FPM está escutando
-EXPOSE 9000
+# Expor a porta que o servidor embutido usará
+EXPOSE 8000
 
-# Iniciar o PHP-FPM
-CMD ["php-fpm", "--nodaemonize"]
+# Iniciar o servidor embutido do Laravel
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
