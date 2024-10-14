@@ -1,0 +1,32 @@
+version: '3.8' # Specify the version of Docker Compose
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wedding-party-app
+    ports:
+      - "8000:8000" # Maps port 8000 to the host
+    volumes:
+      - .:/var/www # Syncs local files with the container
+    networks:
+      - laravel_network
+    restart: unless-stopped
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_KEY: base64:4WYZg+CA8L7eYsc/zKc3uJX33YiQ3h3G7b+nRV7Qr8c=
+    depends_on:
+      - db
+
+  db:
+    image: nouchka/sqlite3 # Minimal SQLite image (for persistence)
+    volumes:
+      - ./database:/var/www/database
+    networks:
+      - laravel_network
+
+networks:
+  laravel_network:
+    driver: bridge # Defines the network type

@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Family;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FamilyController extends Controller
 {
     public function index()
     {
-        $families = Family::with('members')->get();
-        $totalFamilies = Family::count();
+        $family = Family::with('members')->get();
+        $totalfamily = Family::count();
         $totalGuests = Member::count();
 
-        return view('dashboard', compact('families', 'totalFamilies', 'totalGuests'));
+        return view('dashboard', compact('family', 'totalfamily', 'totalGuests'));
     }
 
     public function create()
@@ -36,7 +38,7 @@ class FamilyController extends Controller
             Member::create(['name' => $member, 'family_id' => $family->id]);
         }
 
-        return redirect()->route('families.index')->with('success', 'Family and members registered successfully!');
+        return redirect()->route('family.index')->with('success', 'Family and members registered successfully!');
     }
 
     public function edit($id)
@@ -61,7 +63,7 @@ class FamilyController extends Controller
             Member::create(['name' => $member, 'family_id' => $family->id]);
         }
 
-        return redirect()->route('families.index')->with('success', 'Family and members updated successfully!');
+        return redirect()->route('family.index')->with('success', 'Family and members updated successfully!');
     }
 
     public function delete($id)
@@ -77,6 +79,43 @@ class FamilyController extends Controller
         $family->members()->delete();
         $family->delete();
 
-        return redirect()->route('families.index')->with('success', 'Family and members deleted successfully!');
+        return redirect()->route('family.index')->with('success', 'Family and members deleted successfully!');
+    }
+
+    public function exportCsv()
+    {
+        $family = Family::with('members')->get();
+
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=family.csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function () use ($family) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Family Name', 'Total Members']);
+
+            foreach ($family as $family) {
+                fputcsv($handle, [$family->name, $family->members->count()]);
+            }
+
+            fclose($handle);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
+    }
+
+    public function exportPdf()
+    {
+        $family = Family::with('members')->get();
+        $totalfamily = Family::count();
+        $totalGuests = Member::count();
+
+        $pdf = Pdf::loadView('family', compact('family', 'totalfamily', 'totalGuests'));
+
+        return $pdf->download('family.pdf');
     }
 }
