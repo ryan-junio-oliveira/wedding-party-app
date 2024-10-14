@@ -2,11 +2,10 @@ version: 1
 services:
   - type: web
     name: laravel-app
-    env: php
+    env: docker
     plan: free
-    runtime: php8.1  # Updated to supported version
-    buildCommand: "composer install --no-dev"
-    startCommand: "php artisan serve --host 0.0.0.0 --port 10000"
+    docker:
+      dockerfile: Dockerfile
     envVars:
       - key: APP_KEY
         value: "base64:4WYZg+CA8L7eYsc/zKc3uJX33YiQ3h3G7b+nRV7Qr8c="
