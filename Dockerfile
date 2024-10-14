@@ -25,6 +25,12 @@ COPY . .
 # Instalar as dependências do PHP
 RUN composer install --no-dev --optimize-autoloader
 
+# Garantir que o arquivo .env exista
+COPY .env.example .env
+
+# Gerar a chave da aplicação
+RUN php artisan key:generate
+
 # Executar migrações e outras otimizações para produção
 RUN php artisan config:cache \
     && php artisan route:cache \
@@ -33,6 +39,9 @@ RUN php artisan config:cache \
 
 # Dar permissão ao diretório de cache e storage
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
+
+# Garantir permissões corretas para o diretório storage e bootstrap/cache
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Expor a porta da aplicação
 EXPOSE 8000
