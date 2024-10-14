@@ -7,9 +7,15 @@ services:
     buildCommand: "composer install --no-dev"
     startCommand: "php artisan serve --host 0.0.0.0 --port 10000"
     envVars:
-      APP_KEY: "base64:4WYZg+CA8L7eYsc/zKc3uJX33YiQ3h3G7b+nRV7Qr8c="
-      APP_ENV: "production"
-      APP_DEBUG: "false"
-      APP_URL: "https://your-app.onrender.com" # Substitua pelo URL real do seu app
-      DB_CONNECTION: "sqlite"
-      DB_DATABASE: "/app/database/database.sqlite" # Caminho para o arquivo SQLite
+      - key: APP_KEY
+        value: "base64:4WYZg+CA8L7eYsc/zKc3uJX33YiQ3h3G7b+nRV7Qr8c="
+      - key: APP_ENV
+        value: "production"
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: "https://your-app.onrender.com"  # Replace with your actual app URL
+      - key: DB_CONNECTION
+        value: "sqlite"
+      - key: DB_DATABASE
+        value: "/app/database/database.sqlite"  # Path to the SQLite file
