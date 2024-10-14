@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 
 # Copiar o arquivo composer.lock e composer.json
-COPY composer.lock composer.json ./
+COPY composer.json ./
 
 # Instalar o Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
