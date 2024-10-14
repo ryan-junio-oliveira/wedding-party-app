@@ -1,38 +1,34 @@
-# Use the official PHP image with Apache
-FROM php:8.3-apache
+# Usar uma imagem base do PHP
+FROM php:8.2-fpm
 
-# Install system dependencies and PHP extensions
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    sqlite3 \
-    libsqlite3-dev \
-    zip \
+    libzip-dev \
     unzip \
     git \
-    libzip-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_sqlite zip
+    && docker-php-ext-install gd zip pdo pdo_sqlite
 
-# Define the working directory
-WORKDIR /var/www/html
+# Instalar o Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy the composer.lock and composer.json files
-COPY composer.lock composer.json ./
+# Definir o diretório de trabalho
+WORKDIR /var/www
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer install --no-dev
-
-# Copy the rest of the application code
+# Copiar os arquivos da aplicação para o contêiner
 COPY . .
 
-# Set permissions for the storage and bootstrap/cache directories
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Instalar dependências da aplicação
+RUN composer install --no-dev --optimize-autoloader
 
-# Enable the Apache rewrite module
-RUN a2enmod rewrite
+# Ajustar permissões
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose the default Apache port
-EXPOSE 80
+# Expor a porta que o PHP-FPM está escutando
+EXPOSE 9000
+
+# Iniciar o PHP-FPM
+CMD ["php-fpm"]
