@@ -1,5 +1,5 @@
 # Use a imagem oficial do PHP com Apache
-FROM php:8.3-apache
+FROM php:8.1-apache
 
 # Instalar dependências do sistema e extensões do PHP
 RUN apt-get update && apt-get install -y \
@@ -8,8 +8,11 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     sqlite3 \
     libsqlite3-dev \
+    zip \
+    unzip \
+    git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_sqlite
+    && docker-php-ext-install gd pdo pdo_mysql pdo_sqlite zip
 
 # Definir o diretório de trabalho
 WORKDIR /var/www/html
