@@ -27,8 +27,14 @@
             <label for="members" class="block text-sm font-medium text-gray-700">Membros da Familia</label>
             <div id="members-container" class="space-y-2">
                 @foreach ($family->members as $member)
-                    <input type="text" name="members[]" value="{{ $member->name }}" required
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <div class="flex items-center space-x-2">
+                        <input type="text" name="members[]" value="{{ $member->name }}" required
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <button type="button" onclick="removeMember(this)"
+                            class="px-2 py-2 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700 focus:outline-none">
+                            Remover
+                        </button>
+                    </div>
                 @endforeach
             </div>
             <button type="button" onclick="addMember()"
@@ -49,12 +55,22 @@
 <script>
     function addMember() {
         const container = document.getElementById('members-container');
-        const input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        input.setAttribute('name', 'members[]');
-        input.setAttribute('required', true);
-        input.setAttribute('class', 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm');
-        container.appendChild(input);
+        const memberDiv = document.createElement('div');
+        memberDiv.className = 'flex items-center space-x-2';
+        memberDiv.innerHTML = `
+            <input type="text" name="members[]" required
+                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <button type="button" onclick="removeMember(this)"
+                class="px-2 py-2 bg-red-600 text-white text-xs font-medium rounded-md shadow hover:bg-red-700 focus:outline-none">
+                Remover
+            </button>
+        `;
+        container.appendChild(memberDiv);
+    }
+
+    function removeMember(button) {
+        const memberDiv = button.parentElement; // Obtém o div pai do botão
+        memberDiv.remove(); // Remove o div do membro
     }
 </script>
 @endsection

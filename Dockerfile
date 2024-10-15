@@ -1,3 +1,4 @@
+# Base de imagem
 FROM php:8.3-cli
 
 # Instalar dependências do sistema
@@ -11,10 +12,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_sqlite
+    && docker-php-ext-install gd zip pdo pdo_sqlite \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Instalar Composer diretamente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Configurar o diretório de trabalho
 WORKDIR /var/www
@@ -31,7 +33,7 @@ COPY .env.example .env
 # Gerar a chave da aplicação
 RUN php artisan key:generate
 
-# Executar migrações e outras otimizações para produção
+# Executar migrações e otimizações para produção
 RUN php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache \
