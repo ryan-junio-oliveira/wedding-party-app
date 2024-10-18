@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Edit Family')
+@section('title', 'Editar Familia')
 
-@section('header', 'Edit Family')
+@section('header', 'Editar Familia')
 
 @section('content')
 <div class="mb-6">

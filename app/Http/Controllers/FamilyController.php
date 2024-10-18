@@ -10,14 +10,22 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FamilyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $family = Family::with('members')->get();
-        $totalfamily = Family::count();
-        $totalGuests = Member::count();
+        $searchTerm = $request->input('search');
+        $familyQuery = Family::with('members');
 
-        return view('dashboard', compact('family', 'totalfamily', 'totalGuests'));
+        if ($searchTerm) {
+            $familyQuery->where('name', 'like', "%{$searchTerm}%"); // Filtra pelo nome da família
+        }
+
+        $family = $familyQuery->get();
+        $totalfamily = $familyQuery->count(); // Conta apenas as famílias filtradas
+        $totalGuests = Member::count(); // Total de membros sem filtro
+
+        return view('dashboard', compact('family', 'totalfamily', 'totalGuests', 'searchTerm'));
     }
+
 
     public function create()
     {

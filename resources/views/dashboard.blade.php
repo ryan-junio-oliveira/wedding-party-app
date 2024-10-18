@@ -7,15 +7,32 @@
 @section('content')
 <div class="mb-6 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex">
     <a href="{{ route('family.create') }}"
-        class="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700 focus:outline-none">
-        Registrar nova familia
+        class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700 focus:outline-none">
+        Registrar nova família
     </a>
-    <a href="{{ route('family.export') }}" class="inline-block px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md shadow hover:bg-green-700 focus:outline-none">
+
+    <a href="{{ route('family.export') }}"
+        class="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md shadow hover:bg-green-700 focus:outline-none">
         Exportar CSV
     </a>
-    <a href="{{ route('family.export.pdf') }}" class="inline-block px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md shadow hover:bg-red-700 focus:outline-none">
+
+    <a href="{{ route('family.export.pdf') }}"
+        class="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md shadow hover:bg-red-700 focus:outline-none">
         Exportar PDF
     </a>
+
+    <form method="GET" action="{{ route('family.index') }}" class="mb-4 flex gap-2">
+        <input type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Pesquisar famílias..."
+            class="border border-gray-300 rounded-l-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <button type="submit"
+            class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600 transition duration-200">
+            Buscar
+        </button>
+    </form>
+
 </div>
 
 <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">

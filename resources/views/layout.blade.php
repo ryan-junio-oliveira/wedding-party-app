@@ -20,9 +20,10 @@
                 <a href="{{ route('about') }}" class="text-gray-700 hover:text-blue-600">About Us</a>
                 <a href="{{ route('contact') }}" class="text-gray-700 hover:text-blue-600">Contact</a> -->
 
-                <a href="" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                <a href="{{route('family.index') }}" class="text-gray-700 hover:text-blue-600">Dashboard</a>
                 <a href="" class="text-gray-700 hover:text-blue-600">Fornecedores</a>
-                <a href="" class="text-gray-700 hover:text-blue-600">Registrar Familia</a>
+                <a href="{{route('family.index') }}" class="text-gray-700 hover:text-blue-600">Familias e Convidados</a>
+                <a href="{{ route('backup.database')}}" class="text-gray-700 hover:text-blue-600">Realizar Backup</a>
             </nav>
             <div class="md:hidden">
                 <button id="menu-toggle" class="focus:outline-none">
