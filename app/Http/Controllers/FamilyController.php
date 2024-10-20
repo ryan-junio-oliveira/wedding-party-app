@@ -13,23 +13,23 @@ class FamilyController extends Controller
     public function index(Request $request)
     {
         $searchTerm = $request->input('search');
-        $familyQuery = Family::with('members');
+        $familyQuery = Family::with('members');   
 
         if ($searchTerm) {
             $familyQuery->where('name', 'like', "%{$searchTerm}%"); // Filtra pelo nome da família
         }
 
-        $family = $familyQuery->get();
+        $family = $familyQuery->orderBy('name')->get();
         $totalfamily = $familyQuery->count(); // Conta apenas as famílias filtradas
         $totalGuests = Member::count(); // Total de membros sem filtro
 
-        return view('dashboard', compact('family', 'totalfamily', 'totalGuests', 'searchTerm'));
+        return view('family.index', compact('family', 'totalfamily', 'totalGuests', 'searchTerm'));
     }
 
 
     public function create()
     {
-        return view('create');
+        return view('family.create');
     }
 
     public function store(Request $request)
@@ -52,7 +52,7 @@ class FamilyController extends Controller
     public function edit($id)
     {
         $family = Family::with('members')->findOrFail($id);
-        return view('edit', compact('family'));
+        return view('family.edit', compact('family'));
     }
 
     public function update(Request $request, $id)
@@ -77,7 +77,7 @@ class FamilyController extends Controller
     public function delete($id)
     {
         $family = Family::findOrFail($id);
-        return view('delete', compact('family'));
+        return view('family.delete', compact('family'));
     }
 
 
@@ -122,7 +122,7 @@ class FamilyController extends Controller
         $totalfamily = Family::count();
         $totalGuests = Member::count();
 
-        $pdf = Pdf::loadView('family', compact('family', 'totalfamily', 'totalGuests'));
+        $pdf = Pdf::loadView('pdf.family', compact('family', 'totalfamily', 'totalGuests'));
 
         return $pdf->download('family.pdf');
     }

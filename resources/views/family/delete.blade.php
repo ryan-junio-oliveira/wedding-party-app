@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Delete Family')
+@section('title', 'Excluir Familia')
 
-@section('header', 'Confirm Family Deletion')
+@section('header', 'Confirma Excluir Familia')
 
 @section('content')
 <div class="mb-6">
